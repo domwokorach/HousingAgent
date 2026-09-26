@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { IMAGE_CATEGORIES, IMAGE_CATEGORY_LABELS } from "@/constants/propertyTypes";
 import { useProperties } from "@/hooks/useProperties";
-import { ACCEPTED_IMAGE_TYPES, describeLimit, readImageFiles } from "@/lib/upload";
+import { ACCEPTED_IMAGE_TYPES, describeLimit, uploadImageFiles } from "@/lib/upload";
 import { makeId } from "@/lib/utils";
 import type { ImageCategory, Property, PropertyImage } from "@/types/property";
 import {
@@ -32,6 +32,7 @@ export function PropertyImageManager({ property }: { property: Property }) {
   const [picker, setPicker] = useState<Picker | null>(null);
   const [notice, setNotice] = useState<string>();
   const [error, setError] = useState<string>();
+  const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
   const replaceTarget = useRef<number | null>(null);
 
@@ -93,32 +94,36 @@ export function PropertyImageManager({ property }: { property: Property }) {
   };
 
   const handleFiles = async (files: FileList | null, replaceIndex: number | null) => {
-    const { accepted, rejected } = await readImageFiles(files, {
-      alt: `Photo of ${property.title}`,
-    });
+    setUploading(true);
+    try {
+      const { accepted, rejected } = await uploadImageFiles(files, {
+        alt: `Photo of ${property.title}`,
+      });
 
-    if (accepted.length > 0) {
-      if (replaceIndex !== null) {
-        await commit(
-          images.map((existing, i) => (i === replaceIndex ? accepted[0] : existing)),
-          `Photo ${replaceIndex + 1} replaced.`,
-        );
-      } else {
-        await commit(
-          [...images, ...accepted],
-          `${accepted.length} photo${accepted.length === 1 ? "" : "s"} uploaded.`,
-        );
+      if (accepted.length > 0) {
+        if (replaceIndex !== null) {
+          await commit(
+            images.map((existing, i) => (i === replaceIndex ? accepted[0] : existing)),
+            `Photo ${replaceIndex + 1} replaced.`,
+          );
+        } else {
+          await commit(
+            [...images, ...accepted],
+            `${accepted.length} photo${accepted.length === 1 ? "" : "s"} uploaded.`,
+          );
+        }
       }
+
+      setError(
+        rejected.length > 0
+          ? `Skipped ${rejected.length} file${rejected.length === 1 ? "" : "s"}: ${rejected.join("; ")}. Photos must be under ${describeLimit()}.`
+          : undefined,
+      );
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+      replaceTarget.current = null;
     }
-
-    setError(
-      rejected.length > 0
-        ? `Skipped ${rejected.length} file${rejected.length === 1 ? "" : "s"}: ${rejected.join("; ")}. Uploads are held in your browser, so they must stay under ${describeLimit()}.`
-        : undefined,
-    );
-
-    if (fileRef.current) fileRef.current.value = "";
-    replaceTarget.current = null;
   };
 
   const openFilePicker = (replaceIndex: number | null) => {
@@ -137,7 +142,13 @@ export function PropertyImageManager({ property }: { property: Property }) {
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Button variant="secondary" size="sm" onClick={() => openFilePicker(null)}>
+          <Button
+            variant="secondary"
+            size="sm"
+            loading={uploading}
+            disabled={uploading}
+            onClick={() => openFilePicker(null)}
+          >
             <IconUpload className="size-4" />
             Upload photos
           </Button>

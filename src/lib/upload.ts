@@ -1,12 +1,15 @@
+import { upload } from "@vercel/blob/client";
 import type { ImageCategory, PropertyImage } from "@/types/property";
 import { makeId } from "./utils";
 
 /**
- * Uploaded photos are held as data URLs inside a ~5MB localStorage quota, so
- * each file has to stay small. A server-backed deployment would replace this
- * module with a signed-upload call to object storage.
+ * Uploaded photos go straight to Vercel Blob from the browser (the token
+ * endpoint is `/api/blob/upload`), so file bytes never pass through a
+ * Next.js function body. `MAX_UPLOAD_BYTES` here just gives the picker a
+ * client-side limit to check before starting an upload — the enforced limit
+ * lives server-side in the token route.
  */
-export const MAX_UPLOAD_BYTES = 400_000;
+export const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
 export const ACCEPTED_IMAGE_TYPES = "image/*";
 
@@ -16,21 +19,12 @@ export interface UploadOutcome {
   rejected: string[];
 }
 
-function readAsDataUrl(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.onerror = () => reject(reader.error ?? new Error("Could not read file"));
-    reader.readAsDataURL(file);
-  });
-}
-
 export function describeLimit(): string {
-  return `${Math.round(MAX_UPLOAD_BYTES / 1000)}KB`;
+  return `${Math.round(MAX_UPLOAD_BYTES / 1_000_000)}MB`;
 }
 
-/** Reads the picked files, skipping anything that isn't a small enough image. */
-export async function readImageFiles(
+/** Uploads the picked files to Vercel Blob, skipping anything invalid. */
+export async function uploadImageFiles(
   files: FileList | File[] | null,
   options: { alt: string; category?: ImageCategory } = { alt: "Property photo" },
 ): Promise<UploadOutcome> {
@@ -49,14 +43,18 @@ export async function readImageFiles(
     }
 
     try {
+      const blob = await upload(`properties/${makeId("img")}-${file.name}`, file, {
+        access: "public",
+        handleUploadUrl: "/api/blob/upload",
+      });
       accepted.push({
         id: makeId("img"),
-        src: await readAsDataUrl(file),
+        src: blob.url,
         category: options.category ?? "other",
         alt: options.alt,
       });
     } catch {
-      rejected.push(`${file.name} could not be read`);
+      rejected.push(`${file.name} could not be uploaded`);
     }
   }
 

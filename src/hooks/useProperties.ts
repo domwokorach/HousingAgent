@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { selectListings, selectUser } from "@/lib/db";
 import * as propertyService from "@/services/property.service";
 import type { Property, PropertyDraft, PropertyImage } from "@/types/property";
@@ -9,7 +9,31 @@ import { useAppState } from "./useAppState";
 export function useProperties() {
   const state = useAppState();
 
-  const listings = useMemo(() => selectListings(state), [state]);
+  // Real, Postgres-backed listings (created in-app via /api/listings) are
+  // fetched once on mount and merged with the seed/demo catalog — the mock
+  // store's reads are synchronous, but the DB's aren't, so they're held in
+  // local state and refreshed after any mutation that might touch them.
+  const [dbListings, setDbListings] = useState<Property[]>([]);
+
+  const refetchDbListings = useCallback(async () => {
+    setDbListings(await propertyService.fetchDbListings());
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    propertyService.fetchDbListings().then((properties) => {
+      if (active) setDbListings(properties);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  const seedListings = useMemo(() => selectListings(state), [state]);
+  const listings = useMemo(
+    () => [...dbListings, ...seedListings.filter((p) => !dbListings.some((d) => d.id === p.id))],
+    [dbListings, seedListings],
+  );
   const user = useMemo(() => selectUser(state), [state]);
 
   const myListings = useMemo(
@@ -45,22 +69,36 @@ export function useProperties() {
   );
 
   const createProperty = useCallback(
-    (draft: PropertyDraft) => propertyService.createProperty(draft, user),
-    [user],
+    async (draft: PropertyDraft) => {
+      const result = await propertyService.createProperty(draft, user);
+      if (result.ok) void refetchDbListings();
+      return result;
+    },
+    [user, refetchDbListings],
   );
   const updateProperty = useCallback(
-    (id: string, patch: Partial<Property>) =>
-      propertyService.updateProperty(id, patch),
-    [],
+    async (id: string, patch: Partial<Property>) => {
+      const result = await propertyService.updateProperty(id, patch);
+      if (result.ok) void refetchDbListings();
+      return result;
+    },
+    [refetchDbListings],
   );
   const deleteProperty = useCallback(
-    (id: string) => propertyService.deleteProperty(id),
-    [],
+    async (id: string) => {
+      const result = await propertyService.deleteProperty(id);
+      if (result.ok) void refetchDbListings();
+      return result;
+    },
+    [refetchDbListings],
   );
   const setPropertyImages = useCallback(
-    (id: string, images: PropertyImage[]) =>
-      propertyService.setPropertyImages(id, images),
-    [],
+    async (id: string, images: PropertyImage[]) => {
+      const result = await propertyService.setPropertyImages(id, images);
+      if (result.ok) void refetchDbListings();
+      return result;
+    },
+    [refetchDbListings],
   );
 
   return {

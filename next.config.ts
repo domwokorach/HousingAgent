@@ -2,9 +2,14 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   images: {
-    // Live-listing photos come from the Homedata feed — see RemotePhoto in
-    // src/components/ui/Photo.tsx.
-    remotePatterns: [{ protocol: "https", hostname: "api.homedata.co.uk" }],
+    remotePatterns: [
+      // Live-listing photos come from the Homedata feed — see RemotePhoto in
+      // src/components/ui/Photo.tsx.
+      { protocol: "https", hostname: "api.homedata.co.uk" },
+      // User-uploaded listing photos, stored in Vercel Blob — see
+      // src/lib/upload.ts.
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
+    ],
   },
   /**
    * The routes moved when the app was reorganised. These keep old links —
