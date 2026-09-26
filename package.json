@@ -2,6 +2,22 @@
   "name": "housing-agent",
   "version": "0.1.0",
   "private": true,
+  "description": "A property search application for finding homes to rent or buy across the UK and connecting with housing agents. Built with Next.js 16 (App Router, Turbopack), React 19, TypeScript, Tailwind CSS v4 and Zod.",
+  "homepage": "https://github.com/domwokorach/HousingAgent#readme",
+  "bugs": {
+    "url": "https://github.com/domwokorach/HousingAgent/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/domwokorach/HousingAgent.git"
+  },
+  "license": "ISC",
+  "author": "dominic wokorach olanya",
+  "type": "commonjs",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
