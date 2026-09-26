@@ -110,14 +110,21 @@ To turn it on, create a free account at
 `.env.local` (git-ignored):
 
 ```bash
-NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN="pk.…"   # public token, restrict it by URL
-MAPBOX_SECRET_TOKEN="sk.…"               # optional, geocoding scope only
+NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN="pk.…"   # public token, URL-restricted
+MAPBOX_SERVER_TOKEN="pk.…"               # optional, separate server-side token, not URL-restricted
 ```
 
-Two tokens, deliberately. GL JS authenticates from the browser, so the public
-token is readable by anyone who loads the page — restrict it to your domains in
-the Mapbox dashboard. The geocoding route prefers the secret one so forward
-geocoding isn't billed against a token strangers can lift out of the bundle.
+Two distinct tokens, deliberately. GL JS authenticates from the browser, so
+the public token is readable by anyone who loads the page — create a
+dedicated public token and restrict it to your domains in the Mapbox
+dashboard. The geocoding route prefers the server one: also a public-scope
+(`pk.`) token (Mapbox's geocoding v6 endpoint has no separate "geocoding"
+scope), but deliberately *not* URL-restricted, since server-side requests
+don't carry the browser Referer that URL restrictions check — a restricted
+token would get rejected there. Splitting them gets separate per-token usage
+stats and limits the blast radius if one leaks, isn't billed against a token
+strangers can lift out of the bundle, and doesn't create separate billing —
+both still bill the same Mapbox account.
 
 `mapbox-gl` is proprietary (Mapbox TOS) and billed per map load above the free
 tier, so it is a commercial dependency, not just a technical one.

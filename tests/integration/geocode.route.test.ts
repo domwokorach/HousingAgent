@@ -13,7 +13,7 @@ function request(query: string) {
 const realFetch = globalThis.fetch;
 
 beforeEach(() => {
-  delete process.env.MAPBOX_SECRET_TOKEN;
+  delete process.env.MAPBOX_SERVER_TOKEN;
 });
 
 afterEach(() => {
@@ -64,7 +64,7 @@ describe("without a Mapbox token", () => {
 
 describe("with a Mapbox token", () => {
   beforeEach(() => {
-    process.env.MAPBOX_SECRET_TOKEN = "sk.test-token";
+    process.env.MAPBOX_SERVER_TOKEN = "pk.test-server-token";
   });
 
   it("returns Mapbox coordinates, reading [lng, lat] in the right order", async () => {
@@ -89,7 +89,7 @@ describe("with a Mapbox token", () => {
     expect(body.lng).toBeCloseTo(-0.1415, 4);
   });
 
-  it("uses the secret token, not the public one", async () => {
+  it("uses the server token, not the public one", async () => {
     const spy = vi.fn(async () =>
       Response.json({ features: [{ geometry: { coordinates: [-1.5, 53.8] } }] }),
     );
@@ -98,7 +98,7 @@ describe("with a Mapbox token", () => {
     await GET(request("?postcode=LS1 1AA"));
 
     const called = String((spy.mock.calls[0] as unknown[])[0]);
-    expect(called).toContain("access_token=sk.test-token");
+    expect(called).toContain("access_token=pk.test-server-token");
   });
 
   it("caches, so a repeated postcode costs one request", async () => {

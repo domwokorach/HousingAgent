@@ -5,10 +5,19 @@
  *
  * - `NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN` is readable by anyone who loads the page,
  *   because GL JS runs in the browser and has to authenticate from there. Make
- *   it a *public* token and restrict it by URL in the Mapbox dashboard.
- * - `MAPBOX_SECRET_TOKEN` never leaves the server. The geocoding route prefers
+ *   it a dedicated *public* token and restrict it by URL in the Mapbox
+ *   dashboard.
+ * - `MAPBOX_SERVER_TOKEN` never leaves the server. The geocoding route prefers
  *   it, so forward geocoding isn't billed against a token that strangers can
- *   lift out of the bundle and reuse.
+ *   lift out of the bundle and reuse. Despite the name, this is still a
+ *   *public*-scope (`pk.`) token — Mapbox's geocoding v6 endpoint has no
+ *   distinct "geocoding" scope, just a valid token requirement. It should NOT
+ *   be URL-restricted like the browser one: server requests don't carry the
+ *   Referer that URL restrictions check, so a restricted token gets rejected
+ *   here. Being a separate token buys separate per-token usage stats and a
+ *   smaller blast radius if one leaks — not separate billing, both still bill
+ *   the same Mapbox account. It should not be granted secret-scope (`sk.`)
+ *   permissions.
  *
  * Both are optional. Without them the app falls back to the schematic map and
  * the local outward-code table, so a fresh clone still runs.
@@ -28,7 +37,7 @@ export function hasMapboxToken(): boolean {
  * the feature still works if only one token is configured.
  */
 export function serverGeocodingToken(): string {
-  return process.env.MAPBOX_SECRET_TOKEN || PUBLIC_MAPBOX_TOKEN;
+  return process.env.MAPBOX_SERVER_TOKEN || PUBLIC_MAPBOX_TOKEN;
 }
 
 /**

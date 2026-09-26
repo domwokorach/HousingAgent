@@ -22,10 +22,14 @@ declare global {
 }
 
 function createPool(): Pool {
-  const connectionString = process.env.DATABASE_URL;
+  // Deliberately not DATABASE_URL: that name is claimed by the Neon
+  // integration's auto-synced env vars (POSTGRES_*/PG*/NEON_* in
+  // .env.local), which point at an unrelated Neon database. Reusing it here
+  // would get silently overwritten on the next `vercel env pull`.
+  const connectionString = process.env.RDS_DATABASE_URL;
   if (!connectionString) {
     throw new Error(
-      "DATABASE_URL is not set. Add it to .env.local — see .env.example.",
+      "RDS_DATABASE_URL is not set. Add it to .env.local — see .env.example.",
     );
   }
   return new Pool({

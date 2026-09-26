@@ -30,12 +30,12 @@ export async function GET(request: NextRequest) {
   const limit = positiveInt(params.get("limit"), 1, MAX_LIMIT) ?? DEFAULT_LIMIT;
   const postcode = formatPostcode(rawPostcode);
 
-  if (!process.env.DATABASE_URL) {
+  if (!process.env.RDS_DATABASE_URL) {
     // 503, not 500: the app is fine, this feature just isn't configured.
     return NextResponse.json(
       {
         error:
-          "Sold-price data isn't configured. Set DATABASE_URL in .env.local — see .env.example.",
+          "Sold-price data isn't configured. Set RDS_DATABASE_URL in .env.local — see .env.example.",
         configured: false,
       },
       { status: 503 },
