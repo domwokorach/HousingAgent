@@ -11,13 +11,17 @@ import {
   IconExpand,
 } from "@/components/ui/Icons";
 import { Modal, Photo } from "@/components/ui";
+import type { PhotoComponent } from "@/components/ui";
 
 export function PropertyGallery({
   images,
   title,
+  ImagePhoto = Photo,
 }: {
   images: PropertyImage[];
   title: string;
+  /** Swap in `RemotePhoto` for a real remote-hosted set, e.g. a live listing. */
+  ImagePhoto?: PhotoComponent;
 }) {
   const [index, setIndex] = useState(0);
   const [fullscreen, setFullscreen] = useState(false);
@@ -104,7 +108,7 @@ export function PropertyGallery({
           data-active={i === safeIndex}
           onClick={() => setIndex(i)}
           className={cx(
-            "aspect-[3/2] shrink-0 overflow-hidden border-2 transition-colors",
+            "relative aspect-[3/2] shrink-0 overflow-hidden border-2 transition-colors",
             inViewer
               ? cx(
                   "w-24 rounded-control",
@@ -118,7 +122,7 @@ export function PropertyGallery({
                 ),
           )}
         >
-          <Photo src={image.src} alt="" sizes={inViewer ? "96px" : "112px"} />
+          <ImagePhoto src={image.src} alt="" sizes={inViewer ? "96px" : "112px"} />
           {!inViewer && (
             <span className="sr-only">{IMAGE_CATEGORY_LABELS[image.category]}</span>
           )}
@@ -130,8 +134,8 @@ export function PropertyGallery({
   return (
     <div>
       <div className="relative overflow-hidden rounded-card border border-line bg-surface-2">
-        <div className="aspect-[3/2]">
-          <Photo
+        <div className="relative aspect-[3/2]">
+          <ImagePhoto
             src={current.src}
             alt={current.alt}
             priority
@@ -188,8 +192,8 @@ export function PropertyGallery({
         </div>
 
         <div className="relative flex min-h-0 flex-1 items-center justify-center px-4 pb-4">
-          <div className="flex h-full max-w-5xl items-center justify-center overflow-hidden rounded-card">
-            <Photo
+          <div className="relative flex h-full w-full max-w-5xl items-center justify-center overflow-hidden rounded-card">
+            <ImagePhoto
               src={current.src}
               alt={current.alt}
               priority

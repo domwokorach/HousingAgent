@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  images: {
+    // Live-listing photos come from the Homedata feed — see RemotePhoto in
+    // src/components/ui/Photo.tsx.
+    remotePatterns: [{ protocol: "https", hostname: "api.homedata.co.uk" }],
+  },
   /**
    * The routes moved when the app was reorganised. These keep old links —
    * shared property pages, bookmarks — working. Permanent, because the new

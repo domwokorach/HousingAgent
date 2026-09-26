@@ -124,3 +124,11 @@ export function distanceMiles(a: GeoPoint, b: GeoPoint): number {
 export function looksLikePostcode(input: string): boolean {
   return /^[A-Z]{1,2}\d/i.test(input.trim());
 }
+
+/** The standard full UK postcode pattern (outward + inward, space required). */
+const UK_POSTCODE_REGEX = /^[A-Z]{1,2}\d[A-Z\d]? \d[A-Z]{2}$/;
+
+/** True for a complete, correctly-shaped UK postcode — not a partial/outward one. */
+export function isValidUkPostcode(input: string): boolean {
+  return UK_POSTCODE_REGEX.test(formatPostcode(input));
+}

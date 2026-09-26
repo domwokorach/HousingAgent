@@ -5,7 +5,7 @@ import { formatPriceShort, formatRelative } from "@/lib/utils";
 import type { LiveListing } from "@/types/listing";
 import type { PropertyImage } from "@/types/property";
 import { IconBath, IconBed, IconKey, IconPin } from "@/components/ui/Icons";
-import { Badge, Button, Modal, Photo } from "@/components/ui";
+import { Badge, Button, Modal, RemotePhoto } from "@/components/ui";
 import { PropertyGallery } from "./PropertyGallery";
 import { PropertyMap } from "@/components/maps/PropertyMap";
 
@@ -53,7 +53,7 @@ export function LiveListingCard({ listing }: { listing: LiveListing }) {
       <article className="group flex flex-col overflow-hidden rounded-card border border-line bg-surface shadow-soft transition-[transform,box-shadow,border-color] duration-200 hover:-translate-y-1 hover:border-line-strong hover:shadow-lift">
         <div className="relative aspect-[3/2] overflow-hidden bg-surface-2">
           {cover ? (
-            <Photo
+            <RemotePhoto
               src={cover}
               alt={listing.address}
               sizes="(min-width: 1024px) 380px, (min-width: 640px) 50vw, 100vw"
@@ -130,7 +130,11 @@ export function LiveListingCard({ listing }: { listing: LiveListing }) {
       >
         <div className="flex flex-col gap-6">
           {listing.images.length > 0 ? (
-            <PropertyGallery images={toGalleryImages(listing)} title={listing.address} />
+            <PropertyGallery
+              images={toGalleryImages(listing)}
+              title={listing.address}
+              ImagePhoto={RemotePhoto}
+            />
           ) : (
             <p className="rounded-card border border-dashed border-line-strong px-6 py-10 text-center text-sm text-ink-subtle">
               The agent hasn&apos;t supplied photos for this listing.
