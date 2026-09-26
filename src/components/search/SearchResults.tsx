@@ -10,7 +10,7 @@ import { IconPin, IconSearch } from "@/components/ui/Icons";
 import { Alert, Button, EmptyState, Select } from "@/components/ui";
 import { PropertyFilters } from "@/components/properties/PropertyFilters";
 import { PropertyGrid } from "@/components/properties/PropertyGrid";
-import { PropertiesMap } from "@/components/maps/PropertiesMap";
+import { PropertiesMap, pinFromProperty } from "@/components/maps/PropertiesMap";
 
 /**
  * The shared results experience behind /properties, /rent and /buy. All state
@@ -44,6 +44,7 @@ export function SearchResults({
   // Cap the pins so a nationwide search doesn't put hundreds of markers on
   // the map; the cards below remain the complete list.
   const mapped = results.slice(0, 40).map((result) => result.property);
+  const pins = mapped.map(pinFromProperty);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6">
@@ -157,7 +158,7 @@ export function SearchResults({
             <aside className="hidden lg:block">
               <div className="sticky top-24">
                 <PropertiesMap
-                  properties={mapped}
+                  pins={pins}
                   centre={centre ?? undefined}
                   radiusMiles={centre ? criteria.radius : undefined}
                   caption={

@@ -34,7 +34,9 @@ npm run test:watch # vitest in watch mode
 | `/auth/login` · `/auth/register` | Sign in and sign up |
 | `/auth/forgot-password` · `/auth/reset-password` | Password recovery |
 | `/terms` | Terms and conditions, including the privacy section |
+| `/properties/live` | Live UK listings from the Homedata feed, with a map |
 | `/api/geocode` | Server route: forward-geocodes a postcode to coordinates |
+| `/api/properties` | Server route: proxies the Homedata live-listings search |
 
 Routes from the previous layout (`/login`, `/register`, `/search`,
 `/property/:id`, `/account/properties`) are kept working with permanent
@@ -125,6 +127,9 @@ and properties are marked with rounded cream price pills that invert to dark
 brown when selected, rather than Mapbox's default pins. The basemap defaults to
 `light-v11` — override it with `NEXT_PUBLIC_MAPBOX_STYLE`.
 
+Live listings carry their own `geopoint`, so they go straight onto the map
+without being geocoded.
+
 **Coordinate order.** Mapbox follows GeoJSON and orders coordinates
 `[longitude, latitude]` — the reverse of how a `Property` stores them. Rather
 than rename the model, every hand-off goes through `toLngLat()` / `fromLngLat()`
@@ -144,6 +149,54 @@ The search flow is the one this enables:
 ```
 postcode → geocode → coordinates → radius filter → cards + map markers
 ```
+
+### Live listings (Homedata)
+
+`/properties/live` searches properties currently on the market through the
+[Homedata](https://homedata.co.uk) feed. It is **optional**: with no key the
+page explains that the feature is off and the rest of the app is unaffected.
+
+```bash
+# .env.local — server-side only, never NEXT_PUBLIC_
+HOMEDATA_API_KEY="prefix.secret"
+```
+
+All traffic goes through `src/app/api/properties/route.ts` so the key stays on
+the server. That route turns a place name into a boundary id, searches
+listings, and maps the response onto `LiveListing`.
+
+**Cost.** Measured against the live API, one uncached search costs **6 tokens
+before any listings**: the boundary lookup is 1 and the listings search is 5,
+on top of Homedata's per-listing charge. The published spec describes the
+boundary lookup as free and open — it is neither.
+
+So the route caps `page_size` at 50 (default 12), caches boundary lookups for
+the process lifetime and searches for five minutes, and the UI only searches
+when somebody asks — never on mount. When the account runs out of credit the
+provider answers `402 insufficient_tokens`; that is logged with the top-up link
+and the visitor sees a neutral "temporarily unavailable" instead. No provider
+message — API key prefixes, balances, billing links — is ever forwarded to the
+browser.
+
+**Live listings are not `Property`.** The feed carries no description, floor
+area, EPC, availability date or postcode. Rather than pad those out with
+placeholders and show invented facts as real, `LiveListing` is its own narrower
+type with its own card, and the shared map takes a minimal `MapPin` shape that
+both satisfy.
+
+Things found by probing the live API that differ from its documentation:
+
+- The OpenAPI document calls `/boundaries/autocomplete/` "open access — no API
+  key required". The deployed endpoint returns **403** without a key and
+  **charges 1 token** with one. Both calls send the key.
+- `transaction_type` is `Sale` | **`Rental`** — not "Rent".
+- `bedrooms` is a **minimum**, not an exact match.
+
+The document also carries no response schemas, so field names could not be
+verified ahead of a live call. `src/lib/homedata.ts` therefore *parses* rather
+than assumes: unknown fields are ignored, missing ones become `null` instead of
+leaking `undefined` into the UI, non-https image URLs are dropped, and a
+listing that cannot be parsed is skipped rather than taking the page down.
 
 ### Images
 
@@ -181,6 +234,9 @@ GL JS fails silently.
   server-side session for `proxy.ts` to check.
 - "Send reset link" shows the confirmation a real flow would, but sends nothing;
   `resetPassword` accepts only a hard-coded demo token and says so.
+- Live listings from Homedata are real when a key is configured. Everything
+  else on this page — the 24 seed properties, the agents, the accounts — is
+  sample data.
 - Without a Mapbox token the map is a schematic SVG, and postcodes resolve from
   a local table of ~34 outward codes rather than the real thing. With a token,
   maps and geocoding are real; everything else on this list still applies.
@@ -202,6 +258,7 @@ public/
 src/
   app/                                     routes — thin files that compose components
     api/geocode/                           postcode -> coordinates
+    api/properties/                        Homedata live-listings proxy
   components/
     layout/      Header, Navbar, Footer, Sidebar
     properties/  cards, grid, gallery, details, form, filters, map, image manager
@@ -213,9 +270,11 @@ src/
     maps/        PropertyMap, PropertiesMap, SchematicMap (the no-token fallback)
     ui/          one component per file: Button, Input, Modal, Card, Alert, …
   hooks/         useAuth, useProperties, useAgents, useSearch, useFavourites
-  services/      property, agent, auth, user, postcode, favourite, geocode
-  lib/           db, auth, postcode, mortgage, mapbox, search, seed, upload, utils
-  types/         property, agent, user, search, api
+  services/      property, agent, auth, user, postcode, favourite, geocode,
+                 live-listings
+  lib/           db, auth, postcode, mortgage, mapbox, homedata, search, seed,
+                 upload, utils
+  types/         property, agent, user, search, listing, api
   validation/    zod schemas: auth, property, agent, account
   constants/     propertyTypes, accountTypes, navigation
   proxy.ts       security headers
@@ -226,10 +285,12 @@ tests/
 
 ## Tests
 
-138 tests covering the parts where a mistake is expensive: the money maths,
+170 tests covering the parts where a mistake is expensive: the money maths,
 postcode parsing and formatting, coordinate order, search filtering and
 sorting, the validation schemas, the geocoding route (both the Mapbox and
-fallback branches, with `fetch` stubbed), and the service layer end to end
+fallback branches, with `fetch` stubbed), the Homedata normaliser and proxy
+route (auth on both calls, the rent/Rental mapping, the page-size cap, caching,
+and every failure mode), and the service layer end to end
 (registration, sign-in, listing CRUD, shortlists, and the account-deletion
 cascade).
 
@@ -241,9 +302,10 @@ There is no `tests/e2e` suite yet — Playwright would be the natural fit, and t
 flows worth covering are search → property → enquiry, and register → list a
 property → delete the account.
 
-Not covered: that Mapbox tiles actually draw. That needs a real token, so it was
-verified only as far as "requests reach api.mapbox.com and a rejected token
-falls back cleanly".
+Not covered: that Mapbox tiles actually draw, and that real Homedata listings
+come back correctly. Both need real credentials. Each was verified as far as it
+could be — requests reach the provider, a rejected key degrades cleanly, and
+the UI renders correctly against a stubbed response.
 
 ## Theme
 

@@ -5,9 +5,42 @@ import "mapbox-gl/dist/mapbox-gl.css";
 import { ROUTES } from "@/constants/navigation";
 import { MAPBOX_STYLE, PUBLIC_MAPBOX_TOKEN, toLngLat } from "@/lib/mapbox";
 import { cx, formatPriceShort } from "@/lib/utils";
-import type { Property } from "@/types/property";
+import type { Intent, Property } from "@/types/property";
 import type { GeoPoint } from "@/types/search";
 import { SchematicMap } from "./SchematicMap";
+
+/**
+ * The minimum a marker needs. Kept narrower than `Property` so feeds that
+ * carry less — live listings have no postcode or floor area — can be plotted
+ * without inventing the missing fields.
+ */
+export interface MapPin extends GeoPoint {
+  id: string;
+  title: string;
+  price: number | null;
+  intent: Intent;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  /** Postcode, or any short line under the title. */
+  subtitle?: string;
+  /** Omit to render a popup with no link. */
+  href?: string;
+}
+
+export function pinFromProperty(property: Property): MapPin {
+  return {
+    id: property.id,
+    lat: property.lat,
+    lng: property.lng,
+    title: property.title,
+    price: property.price,
+    intent: property.intent,
+    bedrooms: property.bedrooms,
+    bathrooms: property.bathrooms,
+    subtitle: property.postcode,
+    href: ROUTES.property(property.id),
+  };
+}
 
 /** A ring of points approximating a circle of `miles` around `centre`. */
 function circlePolygon(centre: GeoPoint, miles: number, steps = 64) {
@@ -33,31 +66,45 @@ function circlePolygon(centre: GeoPoint, miles: number, steps = 64) {
  * Builds a popup body from DOM nodes rather than an HTML string. Listing
  * titles are user-entered, so nothing here goes through `setHTML`.
  */
-function popupContent(property: Property): HTMLElement {
+function popupContent(pin: MapPin): HTMLElement {
   const root = document.createElement("div");
   root.className = "ha-popup";
 
   const price = document.createElement("p");
   price.className = "ha-popup__price";
-  price.textContent = `${formatPriceShort(property.price)}${
-    property.intent === "rent" ? " pcm" : ""
-  }`;
+  price.textContent = priceLabel(pin);
 
   const title = document.createElement("p");
   title.className = "ha-popup__title";
-  title.textContent = property.title;
+  title.textContent = pin.title;
 
   const facts = document.createElement("p");
   facts.className = "ha-popup__facts";
-  facts.textContent = `${property.bedrooms} bed · ${property.bathrooms} bath · ${property.postcode}`;
+  facts.textContent = [
+    pin.bedrooms !== null ? `${pin.bedrooms} bed` : null,
+    pin.bathrooms !== null ? `${pin.bathrooms} bath` : null,
+    pin.subtitle || null,
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
-  const link = document.createElement("a");
-  link.className = "ha-popup__link";
-  link.href = ROUTES.property(property.id);
-  link.textContent = "View Property";
+  root.append(price, title, facts);
 
-  root.append(price, title, facts, link);
+  if (pin.href) {
+    const link = document.createElement("a");
+    link.className = "ha-popup__link";
+    link.href = pin.href;
+    link.textContent = "View Property";
+    root.append(link);
+  }
+
   return root;
+}
+
+/** "£425,000", "£1,450 pcm", or a fallback when the price is withheld. */
+function priceLabel(pin: MapPin): string {
+  if (pin.price === null) return "Price on application";
+  return `${formatPriceShort(pin.price)}${pin.intent === "rent" ? " pcm" : ""}`;
 }
 
 /**
@@ -67,13 +114,13 @@ function popupContent(property: Property): HTMLElement {
  * Falls back to the schematic map when no public token is configured.
  */
 export function PropertiesMap({
-  properties,
+  pins,
   centre,
   radiusMiles,
   className,
   caption,
 }: {
-  properties: Property[];
+  pins: MapPin[];
   centre?: GeoPoint;
   radiusMiles?: number;
   className?: string;
@@ -84,12 +131,12 @@ export function PropertiesMap({
   const hasToken = PUBLIC_MAPBOX_TOKEN.length > 0;
 
   // Re-run only when the set of pins actually changes, not on every render.
-  const signature = properties.map((property) => property.id).join(",");
+  const signature = pins.map((pin) => pin.id).join(",");
 
   useEffect(() => {
     if (!hasToken || failed) return;
     const node = container.current;
-    if (!node || properties.length === 0) return;
+    if (!node || pins.length === 0) return;
 
     let map: import("mapbox-gl").Map | undefined;
     let cancelled = false;
@@ -104,15 +151,15 @@ export function PropertiesMap({
         map = new mapboxgl.Map({
           container: node,
           style: MAPBOX_STYLE,
-          center: toLngLat(centre ?? properties[0]),
+          center: toLngLat(centre ?? pins[0]),
           zoom: 11,
         });
 
         map.addControl(new mapboxgl.NavigationControl(), "top-right");
 
-        for (const property of properties) {
+        for (const pin of pins) {
           const popup = new mapboxgl.Popup({ offset: 18 }).setDOMContent(
-            popupContent(property),
+            popupContent(pin),
           );
 
           // A cream price pill; it inverts to dark brown while its popup is
@@ -120,24 +167,22 @@ export function PropertiesMap({
           const pill = document.createElement("button");
           pill.type = "button";
           pill.className = "ha-marker";
-          pill.textContent = `${formatPriceShort(property.price)}${
-            property.intent === "rent" ? " pcm" : ""
-          }`;
-          pill.setAttribute("aria-label", `${property.title} — view on the map`);
+          pill.textContent = priceLabel(pin);
+          pill.setAttribute("aria-label", `${pin.title} — view on the map`);
           pill.setAttribute("aria-pressed", "false");
 
           popup.on("open", () => pill.setAttribute("aria-pressed", "true"));
           popup.on("close", () => pill.setAttribute("aria-pressed", "false"));
 
           new mapboxgl.Marker({ element: pill, anchor: "bottom" })
-            .setLngLat(toLngLat(property))
+            .setLngLat(toLngLat(pin))
             .setPopup(popup)
             .addTo(map);
         }
 
         // Frame every pin, and the search radius when there is one.
         const bounds = new mapboxgl.LngLatBounds();
-        properties.forEach((property) => bounds.extend(toLngLat(property)));
+        pins.forEach((pin) => bounds.extend(toLngLat(pin)));
         if (centre) bounds.extend(toLngLat(centre));
         if (!bounds.isEmpty()) {
           map.fitBounds(bounds, { padding: 56, maxZoom: 14, duration: 0 });
@@ -190,11 +235,7 @@ export function PropertiesMap({
   if (!hasToken || failed) {
     return (
       <SchematicMap
-        markers={properties.map((property) => ({
-          id: property.id,
-          lat: property.lat,
-          lng: property.lng,
-        }))}
+        markers={pins.map((pin) => ({ id: pin.id, lat: pin.lat, lng: pin.lng }))}
         centre={centre}
         radiusMiles={radiusMiles}
         className={className}

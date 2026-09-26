@@ -2,6 +2,7 @@
 export const ROUTES = {
   home: "/",
   properties: "/properties",
+  liveListings: "/properties/live",
   rent: "/rent",
   buy: "/buy",
   propertyCreate: "/properties/create",
@@ -58,6 +59,7 @@ export const FOOTER_COLUMNS: Array<{ title: string; links: NavItem[] }> = [
       { href: ROUTES.rent, label: "Property to rent" },
       { href: ROUTES.buy, label: "Property for sale" },
       { href: ROUTES.properties, label: "Search by postcode" },
+      { href: ROUTES.liveListings, label: "Live listings" },
       { href: ROUTES.saved, label: "Saved properties" },
     ],
   },

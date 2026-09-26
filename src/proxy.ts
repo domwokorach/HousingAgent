@@ -29,7 +29,13 @@ const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   "script-src 'self' 'unsafe-inline' 'unsafe-eval' blob:",
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  /**
+   * Listing photos come from the Homedata feed's CDN, whose hostname isn't
+   * known until a live response arrives. `https:` is broad — narrow it to the
+   * actual host once you've seen one, e.g. "img-src 'self' data: blob:
+   * https://media.homedata.co.uk".
+   */
+  "img-src 'self' data: blob: https:",
   "font-src 'self' data:",
   `connect-src 'self' ${MAPBOX_ORIGINS}`,
   "worker-src 'self' blob:",

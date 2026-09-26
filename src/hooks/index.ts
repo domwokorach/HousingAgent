@@ -4,3 +4,4 @@ export { useProperties } from "./useProperties";
 export { useAgents, DEFAULT_AGENT_CRITERIA } from "./useAgents";
 export { useSearch } from "./useSearch";
 export { useFavourites } from "./useFavourites";
+export { useLiveListings } from "./useLiveListings";
