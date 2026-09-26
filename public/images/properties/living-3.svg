@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img">
+<defs>
+<linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E4E7DC"/><stop offset="1" stop-color="#FDFDF8"/></linearGradient>
+<linearGradient id="wl3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFDF7"/><stop offset="1" stop-color="#EFEADD"/></linearGradient>
+<linearGradient id="fl3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DFD3B9"/><stop offset="1" stop-color="#C6B795"/></linearGradient>
+<linearGradient id="gl3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E1E8E4"/><stop offset="1" stop-color="#FDFDF8"/></linearGradient>
+</defs>
+<rect width="1200" height="800" fill="url(#wl3)"/>
+<rect y="560" width="1200" height="240" fill="url(#fl3)"/>
+<rect y="546" width="1200" height="14" fill="#EFEADD"/>
+<rect y="544" width="1200" height="3" fill="#55584C" opacity=".25"/>
+<rect x="760" y="140" width="330" height="300" rx="6" fill="#55584C"/>
+<rect x="770" y="150" width="310" height="280" fill="url(#gl3)"/>
+<rect x="922" y="150" width="6" height="280" fill="#55584C"/>
+<rect x="770" y="287" width="310" height="6" fill="#55584C"/>
+<!-- rug -->
+<ellipse cx="560" cy="700" rx="420" ry="90" fill="#9C8253" opacity=".28"/>
+<!-- sofa -->
+<rect x="210" y="450" width="430" height="120" rx="26" fill="#C4B69A"/>
+<rect x="230" y="530" width="390" height="110" rx="22" fill="#C4B69A" opacity=".85"/>
+<rect x="250" y="520" width="160" height="60" rx="16" fill="#ffffff" opacity=".35"/>
+<rect x="440" y="520" width="160" height="60" rx="16" fill="#ffffff" opacity=".2"/>
+<rect x="240" y="640" width="26" height="40" fill="#55584C"/>
+<rect x="584" y="640" width="26" height="40" fill="#55584C"/>
+<!-- coffee table -->
+<rect x="680" y="600" width="230" height="20" rx="8" fill="#55584C"/>
+<rect x="700" y="620" width="14" height="60" fill="#55584C" opacity=".8"/>
+<rect x="876" y="620" width="14" height="60" fill="#55584C" opacity=".8"/>
+<circle cx="795" cy="586" r="18" fill="#9CAE8E"/>
+<!-- art -->
+<rect x="250" y="160" width="150" height="190" rx="4" fill="#ffffff" stroke="#55584C" stroke-width="8"/>
+<path d="M266 330 L320 240 L360 290 L388 258 L388 330 Z" fill="#7A8C6E" opacity=".7"/>
+<rect x="440" y="200" width="110" height="110" rx="4" fill="#ffffff" stroke="#55584C" stroke-width="8"/>
+<circle cx="495" cy="255" r="32" fill="#9C8253" opacity=".7"/>
+<!-- floor lamp -->
+<rect x="130" y="380" width="8" height="270" fill="#55584C"/>
+<path d="M96 380 L172 380 L152 320 L116 320 Z" fill="#9C8253"/>
+<ellipse cx="134" cy="652" rx="44" ry="10" fill="#55584C"/>
+</svg>

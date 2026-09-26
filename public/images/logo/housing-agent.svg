@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 72" width="320" height="72" role="img">
+<rect width="56" height="56" y="8" x="4" rx="14" fill="#D8C3A5"/>
+<path d="M17 36 32 23l15 13" fill="none" stroke="#2F2A24" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M21.5 34.5v13a2.5 2.5 0 0 0 2.5 2.5h16a2.5 2.5 0 0 0 2.5-2.5v-13" fill="none" stroke="#2F2A24" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M28 50v-7.5h8V50" fill="none" stroke="#2F2A24" stroke-width="3.5" stroke-linejoin="round"/>
+<text x="74" y="46" font-family="Georgia, serif" font-size="30" font-weight="700" fill="#2F2A24">Housing<tspan fill="#806C58">Agent</tspan></text>
+</svg>

@@ -1,0 +1,282 @@
+@import "tailwindcss";
+
+/**
+ * Cream and white theme.
+ *
+ * Every colour in the app comes from here. Components use the token names
+ * (`bg-surface`, `text-ink-muted`, `border-line`) rather than raw hex, so the
+ * palette can be retuned in one place.
+ */
+@theme {
+  /* --- surfaces ------------------------------------------------------- */
+  --color-canvas: #fffdf7; /* page background */
+  --color-surface: #ffffff; /* cards, inputs, nav */
+  --color-surface-2: #f7f1e8; /* secondary/inset background */
+  --color-cream: #f3e8d7; /* soft cream fills and badges */
+  --color-footer: #eee4d5; /* slightly deeper cream */
+
+  /* --- text ----------------------------------------------------------- */
+  --color-ink: #2f2a24; /* headings, prices, emphasis */
+  --color-ink-body: #514a43; /* body copy */
+  --color-ink-muted: #6f665c; /* secondary information */
+  --color-ink-subtle: #6b6157; /* tertiary detail — darkened from #756B61
+                                  to clear 4.5:1 on a cream background */
+  --color-placeholder: #9a8f82; /* input placeholders only — darkened from
+                                  #A79D92, which sat at 2.7:1 on white */
+
+  /* --- lines ---------------------------------------------------------- */
+  --color-line: #e7ded1; /* card and divider borders */
+  /**
+   * Form control borders. Deepened from #D8C3A5 (1.7:1 on white, effectively
+   * invisible) to something perceptible while still reading as warm beige.
+   * Strict WCAG 1.4.11 wants 3:1 for a control boundary, which needs roughly
+   * #8C7F6E — noticeably greyer than the brief asks for. See README.
+   */
+  --color-line-strong: #b9a180;
+
+  /* --- brand / primary action ----------------------------------------- */
+  --color-brand: #d8c3a5;
+  --color-brand-strong: #c8ae8b; /* hover */
+  --color-brand-ink: #2f2a24; /* text on a brand background */
+  --color-brand-soft: #f3e8d7; /* tinted fill */
+
+  /* --- links and focus ------------------------------------------------ */
+  --color-link: #74614e; /* darkened from #806C58 to clear 4.5:1 on cream */
+  --color-link-hover: #5f5143;
+  /* Deliberately darker than the brand: a focus ring must carry 3:1
+     contrast against what surrounds it, and #D8C3A5 on white does not. */
+  --color-focus: #74614e;
+
+  /* --- accent and status ---------------------------------------------- */
+  --color-accent: #a97c4a; /* featured badges, rating stars */
+  --color-success: #4f7355; /* soft sage */
+  --color-success-soft: #eef3ec;
+  --color-warning: #8a5f28; /* muted warm amber, 4.9:1 on its soft fill */
+  --color-warning-soft: #f8efe1;
+  --color-danger: #a34a42; /* muted red */
+  --color-danger-strong: #8e3f38;
+  --color-danger-soft: #f9edeb;
+
+  /* --- shape and depth ------------------------------------------------ */
+  --radius-control: 10px;
+  --radius-card: 16px;
+
+  --shadow-soft: 0 1px 2px rgba(70, 55, 40, 0.04), 0 4px 16px rgba(70, 55, 40, 0.08);
+  --shadow-lift: 0 2px 4px rgba(70, 55, 40, 0.05), 0 12px 32px rgba(70, 55, 40, 0.12);
+  --shadow-pop: 0 16px 48px rgba(70, 55, 40, 0.18);
+
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The palette is a light theme; there is no dark variant to opt into. */
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--color-ink);
+}
+
+::placeholder {
+  color: var(--color-placeholder);
+}
+
+/* Checked radios and checkboxes need a tone that reads on white; the beige
+   brand colour is far too light for a 16px control. */
+input[type="checkbox"],
+input[type="radio"] {
+  accent-color: var(--color-link);
+}
+
+::selection {
+  background: var(--color-cream);
+  color: var(--color-ink);
+}
+
+/* One focus treatment everywhere: a dark ring plus a soft cream halo. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+/* ---------------------------------------------------------------- Mapbox */
+/*
+ * Mapbox ships its own light chrome. These rules pull the popups, controls and
+ * markers onto the cream palette so the overlay reads as part of the app.
+ */
+.mapboxgl-popup-content {
+  background: var(--color-surface);
+  color: var(--color-ink-body);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  padding: 14px 16px;
+  box-shadow: var(--shadow-lift);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+.mapboxgl-popup-close-button {
+  color: var(--color-ink-muted);
+  font-size: 18px;
+  padding: 2px 7px;
+  border-radius: 8px;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.mapboxgl-popup-close-button:hover {
+  background: var(--color-surface-2);
+  color: var(--color-ink);
+}
+
+/* The tip is a bordered triangle, so it needs the surface colour too. */
+.mapboxgl-popup-anchor-top .mapboxgl-popup-tip {
+  border-bottom-color: var(--color-surface);
+}
+.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+  border-top-color: var(--color-surface);
+}
+.mapboxgl-popup-anchor-left .mapboxgl-popup-tip {
+  border-right-color: var(--color-surface);
+}
+.mapboxgl-popup-anchor-right .mapboxgl-popup-tip {
+  border-left-color: var(--color-surface);
+}
+
+.mapboxgl-ctrl-group {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.mapboxgl-ctrl-group button + button {
+  border-top-color: var(--color-line);
+}
+
+.mapboxgl-ctrl-group button .mapboxgl-ctrl-icon {
+  filter: saturate(0) brightness(0.45);
+}
+
+.mapboxgl-ctrl-group button:hover {
+  background: var(--color-surface-2);
+}
+
+.mapboxgl-ctrl-attrib {
+  background: rgba(255, 253, 247, 0.85) !important;
+  color: var(--color-ink-muted);
+}
+
+.mapboxgl-ctrl-attrib a {
+  color: var(--color-link);
+}
+
+/* --- price markers ---------------------------------------------------- */
+/*
+ * A rounded cream pill showing the price, rather than Mapbox's default pin.
+ * The selected marker inverts to dark brown so it stands out from the rest.
+ */
+.ha-marker {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 11px;
+  border-radius: 999px;
+  border: 1px solid var(--color-line-strong);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: var(--shadow-soft);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.ha-marker:hover {
+  background: var(--color-brand);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lift);
+}
+
+.ha-marker:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.ha-marker[aria-pressed="true"],
+.ha-marker--selected {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: #ffffff;
+}
+
+/* --- popup card ------------------------------------------------------- */
+.ha-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 200px;
+}
+
+.ha-popup__price {
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-ink);
+}
+
+.ha-popup__title {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: var(--color-ink-body);
+}
+
+.ha-popup__facts {
+  font-size: 0.75rem;
+  color: var(--color-ink-subtle);
+}
+
+.ha-popup__link {
+  margin-top: 10px;
+  display: inline-flex;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-control);
+  background: var(--color-brand);
+  color: var(--color-brand-ink);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+
+.ha-popup__link:hover {
+  background: var(--color-brand-strong);
+}

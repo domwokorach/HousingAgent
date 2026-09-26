@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img">
+<defs>
+<linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E8DFD2"/><stop offset="1" stop-color="#FFFDF7"/></linearGradient>
+<linearGradient id="wl1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFDF7"/><stop offset="1" stop-color="#F3E8D7"/></linearGradient>
+<linearGradient id="fl1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E0CDAF"/><stop offset="1" stop-color="#CBB392"/></linearGradient>
+<linearGradient id="gl1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#DCE6E4"/><stop offset="1" stop-color="#FFFDF7"/></linearGradient>
+</defs>
+<rect width="1200" height="800" fill="url(#sky1)"/>
+<circle cx="980" cy="150" r="60" fill="#ffffff" opacity=".7"/>
+<rect y="620" width="1200" height="180" fill="#9FB08C"/>
+<rect y="620" width="1200" height="22" fill="#7E9169" opacity=".5"/>
+<!-- driveway -->
+<path d="M420 800 L560 640 L760 640 L840 800 Z" fill="#CBB392" opacity=".8"/>
+<!-- main house -->
+<rect x="300" y="360" width="520" height="270" fill="#FFFDF7"/>
+<rect x="300" y="360" width="520" height="270" fill="none" stroke="#5F5143" stroke-opacity=".18" stroke-width="3"/>
+<path d="M270 365 L560 195 L850 365 Z" fill="#7D6F5F"/>
+<path d="M270 365 L560 195 L560 365 Z" fill="#000" opacity=".08"/>
+<rect x="640" y="230" width="46" height="90" fill="#7D6F5F"/>
+<rect x="340" y="410" width="130" height="110" rx="6" fill="#5F5143"/>
+<rect x="350" y="420" width="110" height="90" fill="url(#gl1)"/>
+<rect x="402" y="420" width="6" height="90" fill="#5F5143"/>
+<rect x="350" y="462" width="110" height="6" fill="#5F5143"/>
+<rect x="650" y="410" width="130" height="110" rx="6" fill="#5F5143"/>
+<rect x="660" y="420" width="110" height="90" fill="url(#gl1)"/>
+<rect x="712" y="420" width="6" height="90" fill="#5F5143"/>
+<rect x="660" y="462" width="110" height="6" fill="#5F5143"/>
+<rect x="520" y="480" width="90" height="150" rx="4" fill="#C8AE8B"/>
+<circle cx="596" cy="560" r="6" fill="#FFFDF7"/>
+<rect x="505" y="466" width="120" height="16" rx="4" fill="#5F5143" opacity=".5"/>
+<!-- side extension -->
+<rect x="820" y="470" width="150" height="160" fill="#F3E8D7"/>
+<path d="M805 475 L895 415 L985 475 Z" fill="#7D6F5F" opacity=".9"/>
+<rect x="855" y="505" width="80" height="70" rx="6" fill="#5F5143"/>
+<rect x="865" y="515" width="60" height="50" fill="url(#gl1)"/>
+<rect x="892" y="515" width="6" height="50" fill="#5F5143"/>
+<rect x="865" y="537" width="60" height="6" fill="#5F5143"/>
+<!-- tree -->
+<rect x="170" y="520" width="20" height="110" fill="#8A7256"/>
+<circle cx="180" cy="490" r="78" fill="#7E9169"/>
+<circle cx="132" cy="520" r="48" fill="#9FB08C"/>
+<circle cx="226" cy="522" r="44" fill="#9FB08C"/>
+<!-- hedge -->
+<rect x="950" y="580" width="250" height="50" rx="18" fill="#7E9169"/>
+</svg>

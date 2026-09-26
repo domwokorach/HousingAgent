@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img">
+<defs>
+<linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E4E7DC"/><stop offset="1" stop-color="#FDFDF8"/></linearGradient>
+<linearGradient id="wl3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFDF7"/><stop offset="1" stop-color="#EFEADD"/></linearGradient>
+<linearGradient id="fl3" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DFD3B9"/><stop offset="1" stop-color="#C6B795"/></linearGradient>
+<linearGradient id="gl3" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E1E8E4"/><stop offset="1" stop-color="#FDFDF8"/></linearGradient>
+</defs>
+<rect width="1200" height="800" fill="url(#wl3)"/>
+<rect y="600" width="1200" height="200" fill="url(#fl3)"/>
+<rect y="586" width="1200" height="14" fill="#EFEADD"/>
+<rect y="584" width="1200" height="3" fill="#55584C" opacity=".25"/>
+<rect x="60" y="150" width="260" height="300" rx="6" fill="#55584C"/>
+<rect x="70" y="160" width="240" height="280" fill="url(#gl3)"/>
+<rect x="187" y="160" width="6" height="280" fill="#55584C"/>
+<rect x="70" y="297" width="240" height="6" fill="#55584C"/>
+<!-- shelving -->
+<rect x="700" y="160" width="420" height="330" fill="#EFEADD" stroke="#55584C" stroke-opacity=".2" stroke-width="4"/>
+<g fill="#55584C" opacity=".85">
+<rect x="700" y="260" width="420" height="10"/><rect x="700" y="370" width="420" height="10"/>
+</g>
+<rect x="716" y="184" width="18" height="70" rx="3" fill="#C4B69A" opacity=".85"/><rect x="770" y="184" width="24" height="60" rx="3" fill="#9CAE8E" opacity=".85"/><rect x="824" y="184" width="30" height="70" rx="3" fill="#9C8253" opacity=".85"/><rect x="878" y="184" width="18" height="60" rx="3" fill="#6F7566" opacity=".85"/><rect x="932" y="184" width="24" height="70" rx="3" fill="#C4B69A" opacity=".85"/><rect x="986" y="184" width="30" height="60" rx="3" fill="#9CAE8E" opacity=".85"/><rect x="1040" y="184" width="18" height="70" rx="3" fill="#9C8253" opacity=".85"/><rect x="716" y="294" width="18" height="70" rx="3" fill="#9CAE8E" opacity=".85"/><rect x="770" y="294" width="24" height="60" rx="3" fill="#9C8253" opacity=".85"/><rect x="824" y="294" width="30" height="70" rx="3" fill="#6F7566" opacity=".85"/><rect x="878" y="294" width="18" height="60" rx="3" fill="#C4B69A" opacity=".85"/><rect x="932" y="294" width="24" height="70" rx="3" fill="#9CAE8E" opacity=".85"/><rect x="986" y="294" width="30" height="60" rx="3" fill="#9C8253" opacity=".85"/><rect x="1040" y="294" width="18" height="70" rx="3" fill="#6F7566" opacity=".85"/><rect x="716" y="404" width="18" height="70" rx="3" fill="#9C8253" opacity=".85"/><rect x="770" y="404" width="24" height="60" rx="3" fill="#6F7566" opacity=".85"/><rect x="824" y="404" width="30" height="70" rx="3" fill="#C4B69A" opacity=".85"/><rect x="878" y="404" width="18" height="60" rx="3" fill="#9CAE8E" opacity=".85"/><rect x="932" y="404" width="24" height="70" rx="3" fill="#9C8253" opacity=".85"/><rect x="986" y="404" width="30" height="60" rx="3" fill="#6F7566" opacity=".85"/><rect x="1040" y="404" width="18" height="70" rx="3" fill="#C4B69A" opacity=".85"/>
+<!-- desk -->
+<rect x="360" y="520" width="520" height="22" rx="6" fill="#55584C"/>
+<rect x="380" y="542" width="18" height="120" fill="#55584C" opacity=".8"/>
+<rect x="842" y="542" width="18" height="120" fill="#55584C" opacity=".8"/>
+<rect x="520" y="420" width="220" height="130" rx="8" fill="#55584C"/>
+<rect x="532" y="432" width="196" height="106" rx="4" fill="#E1E8E4"/>
+<rect x="600" y="550" width="60" height="10" fill="#55584C"/>
+<!-- chair -->
+<rect x="560" y="600" width="150" height="26" rx="12" fill="#C4B69A"/>
+<rect x="676" y="500" width="26" height="110" rx="12" fill="#C4B69A"/>
+<rect x="626" y="626" width="16" height="70" fill="#55584C"/>
+<ellipse cx="634" cy="704" rx="66" ry="12" fill="#55584C"/>
+<!-- plant -->
+<path d="M180 620 L260 620 L246 720 L194 720 Z" fill="#9C8253"/>
+<path d="M220 620 Q160 540 196 480 Q232 540 220 620Z" fill="#7A8C6E"/>
+<path d="M220 620 Q290 556 262 494 Q214 552 220 620Z" fill="#9CAE8E"/>
+</svg>

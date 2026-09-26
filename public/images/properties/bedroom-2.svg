@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" role="img">
+<defs>
+<linearGradient id="sky2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EFE2DC"/><stop offset="1" stop-color="#FFFCF8"/></linearGradient>
+<linearGradient id="wl2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFCF8"/><stop offset="1" stop-color="#F4E6DC"/></linearGradient>
+<linearGradient id="fl2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3D0B8"/><stop offset="1" stop-color="#CDB393"/></linearGradient>
+<linearGradient id="gl2" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E6E4DF"/><stop offset="1" stop-color="#FFFCF8"/></linearGradient>
+</defs>
+<rect width="1200" height="800" fill="url(#wl2)"/>
+<rect y="580" width="1200" height="220" fill="url(#fl2)"/>
+<rect y="566" width="1200" height="14" fill="#F4E6DC"/>
+<rect y="564" width="1200" height="3" fill="#5C4D44" opacity=".25"/>
+<rect x="820" y="150" width="300" height="280" rx="6" fill="#5C4D44"/>
+<rect x="830" y="160" width="280" height="260" fill="url(#gl2)"/>
+<rect x="967" y="160" width="6" height="260" fill="#5C4D44"/>
+<rect x="830" y="287" width="280" height="6" fill="#5C4D44"/>
+<!-- headboard -->
+<rect x="250" y="250" width="480" height="230" rx="18" fill="#C9A98F" opacity=".9"/>
+<g fill="#ffffff" opacity=".12">
+<rect x="270" y="268" width="100" height="194" rx="12"/><rect x="388" y="268" width="100" height="194" rx="12"/><rect x="506" y="268" width="100" height="194" rx="12"/><rect x="624" y="268" width="100" height="194" rx="12"/>
+</g>
+<!-- bed -->
+<rect x="220" y="470" width="540" height="40" rx="10" fill="#FFFCF8"/>
+<rect x="220" y="510" width="540" height="150" rx="14" fill="#FFFCF8"/>
+<rect x="220" y="580" width="540" height="80" rx="10" fill="#A6B197" opacity=".55"/>
+<rect x="290" y="430" width="150" height="60" rx="16" fill="#ffffff" opacity=".9"/>
+<rect x="540" y="430" width="150" height="60" rx="16" fill="#ffffff" opacity=".9"/>
+<rect x="250" y="660" width="24" height="46" fill="#5C4D44"/>
+<rect x="706" y="660" width="24" height="46" fill="#5C4D44"/>
+<!-- bedside tables -->
+<rect x="90" y="500" width="120" height="150" rx="8" fill="#F4E6DC" stroke="#5C4D44" stroke-opacity=".2" stroke-width="3"/>
+<rect x="125" y="560" width="50" height="8" rx="4" fill="#5C4D44"/>
+<path d="M118 500 L182 500 L166 450 L134 450 Z" fill="#A97C4A"/>
+<rect x="770" y="500" width="120" height="150" rx="8" fill="#F4E6DC" stroke="#5C4D44" stroke-opacity=".2" stroke-width="3"/>
+<rect x="805" y="560" width="50" height="8" rx="4" fill="#5C4D44"/>
+<path d="M798 500 L862 500 L846 450 L814 450 Z" fill="#A97C4A"/>
+</svg>

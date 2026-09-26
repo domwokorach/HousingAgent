@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" width="160" height="160" role="img">
+<rect width="160" height="160" rx="30" fill="#F3E8D7"/>
+<rect x="8" y="8" width="144" height="144" rx="24" fill="none" stroke="#75604E" stroke-opacity=".22" stroke-width="2"/>
+<path d="M44 92 L80 60 L116 92 L116 120 L44 120 Z" fill="#75604E" fill-opacity=".08"/>
+<path d="M38 94 L80 56 L122 94" fill="none" stroke="#75604E" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="80" y="112" text-anchor="middle" font-family="Georgia, serif" font-size="42" font-weight="700" fill="#75604E">TR</text>
+</svg>
